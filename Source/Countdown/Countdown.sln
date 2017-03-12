@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Countdown.Windows", "Countd
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Countdown.WindowsPhone", "Countdown\Countdown.WindowsPhone\Countdown.WindowsPhone.csproj", "{8CD4FF28-5BD4-4784-86ED-070BB8AEEF88}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CountdownCore", "CountdownCore\CountdownCore.csproj", "{F45B77FE-8DA6-421A-97D8-0B0BCBCCEE3F}"
+EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		Countdown\Countdown.Shared\Countdown.Shared.projitems*{b8a2ac92-9e05-4e3c-9876-93765525a568}*SharedItemsImports = 4
@@ -72,6 +74,16 @@ Global
 		{8CD4FF28-5BD4-4784-86ED-070BB8AEEF88}.Release|x86.ActiveCfg = Release|x86
 		{8CD4FF28-5BD4-4784-86ED-070BB8AEEF88}.Release|x86.Build.0 = Release|x86
 		{8CD4FF28-5BD4-4784-86ED-070BB8AEEF88}.Release|x86.Deploy.0 = Release|x86
+		{F45B77FE-8DA6-421A-97D8-0B0BCBCCEE3F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F45B77FE-8DA6-421A-97D8-0B0BCBCCEE3F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F45B77FE-8DA6-421A-97D8-0B0BCBCCEE3F}.Debug|ARM.ActiveCfg = Debug|Any CPU
+		{F45B77FE-8DA6-421A-97D8-0B0BCBCCEE3F}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{F45B77FE-8DA6-421A-97D8-0B0BCBCCEE3F}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{F45B77FE-8DA6-421A-97D8-0B0BCBCCEE3F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F45B77FE-8DA6-421A-97D8-0B0BCBCCEE3F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F45B77FE-8DA6-421A-97D8-0B0BCBCCEE3F}.Release|ARM.ActiveCfg = Release|Any CPU
+		{F45B77FE-8DA6-421A-97D8-0B0BCBCCEE3F}.Release|x64.ActiveCfg = Release|Any CPU
+		{F45B77FE-8DA6-421A-97D8-0B0BCBCCEE3F}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
