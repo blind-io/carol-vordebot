@@ -28,8 +28,14 @@ namespace CountdownCore
         /// <returns></returns>
         public bool CanCombine(ref CountdownNumber other)
         {
-            return (this.NumbersHash & other.NumbersHash) == 0;
+            return CanCombine(this.NumbersHash , other.NumbersHash);
         }
+
+        public static bool CanCombine(int h1, int h2)
+        {
+            return 0 == (h1 & h2) ;
+        }
+
         /// <summary>
         /// 
         /// </summary>
@@ -37,7 +43,12 @@ namespace CountdownCore
         /// <returns>the combined hash of the two numbers</returns>
         public int CombineHash(ref CountdownNumber other)
         {
-            return this.NumbersHash | other.NumbersHash;
+            return CombineHash( this.NumbersHash , other.NumbersHash);
+        }
+
+        public static int CombineHash(int h1, int h2)
+        {
+            return h1 | h2;
         }
         
     }
@@ -74,7 +85,7 @@ namespace CountdownCore
             ADD, MULTIPLY, SUBTRACT          
         }
 
-        public ComboCountdownNumber(ref CountdownNumber parentA, ref CountdownNumber parentB, Operation operation)
+        public ComboCountdownNumber( CountdownNumber parentA,  CountdownNumber parentB, Operation operation)
         {
             if (operation == Operation.SUBTRACT && parentA.Value < parentB.Value)
             {

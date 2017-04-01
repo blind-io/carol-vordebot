@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Diagnostics;
 
 namespace CountdownCore
 {
@@ -10,17 +11,41 @@ namespace CountdownCore
     {
 
         CountdownSolverMethod_Base method;
-        CountdownSolverContainer_Base container;
         CountdownPuzzle puzzle;
         
     }
 
     public abstract class CountdownSolverMethod_Base
     {
-        
-        public abstract void Initialise(CountdownSolverContainer_Base container, CountdownPuzzle puzzle);
+        protected CountdownSolverContainer_Base container;
+        protected CountdownPuzzle puzzle;
+        protected List<CountdownNumber> solutions;
 
-        public abstract void Solve();
+        public CountdownSolverMethod_Base(CountdownSolverContainer_Base container)
+        {
+            this.container = container;
+        }
+
+
+        public virtual void Solve(CountdownPuzzle puzzle)
+        {
+            this.puzzle = puzzle;
+            this.container.Initialise(puzzle);
+            solutions.Clear();
+            SolveImplementation();
+        }
+
+        protected abstract void SolveImplementation();
+
+        protected bool CheckAddSolution(CountdownNumber number)
+        {
+            bool match = number.Value == puzzle.solution;
+            if(match)
+            {
+                solutions.Add(number);
+            }
+            return match;
+        }
 
     }
 
@@ -94,14 +119,75 @@ namespace CountdownCore
 
     public class CountDownSolverMethod_Simple: CountdownSolverMethod_Base
     {
-        public override void Initialise(CountdownSolverContainer_Base container, CountdownPuzzle puzzle)
+
+        public CountDownSolverMethod_Simple(CountdownSolverContainer_Base container)
+            : base(container)
+        { }
+        
+
+        protected override void SolveImplementation()
         {
-            throw new NotImplementedException();
+            int size = this.puzzle.size;
+            for(int i=1; i<size; i++) //stop when we know we have tried all combinations.
+            {
+                CombineAll(); //calling this multiple times will generate a lot of duplicate solutions
+            }
+            
+
         }
 
-        public override void Solve()
+        /// <summary>
+        /// Tries every group against every other group
+        /// </summary>
+        private void CombineAll()
         {
-            throw new NotImplementedException();
+            var hashes = container.GetHashes(); //do I need to copy?
+            var count = hashes.Count;
+            for(int first=0; first<count; first++)
+            {
+                for(int second =first+1; second<count; second++)
+                {
+                    
+                    if (CountdownNumber.CanCombine(hashes[first], hashes[second]))
+                    {
+                        CombineTwoSets(hashes[first], hashes[second]);
+                    }
+                }
+            }
+        }
+
+        private void CombineTwoSets(int firstHash, int secondHash)
+        {
+            Debug.Assert(CountdownNumber.CanCombine(firstHash, secondHash));
+            var firstList = container.GetNumbers(firstHash);
+            var secondList = container.GetNumbers(secondHash);
+            
+            //pre-allocate results list
+            var results = new List<CountdownNumber>(3* firstList.Count * secondList.Count); //3 is the magic number (of operations)
+            foreach(var n1 in firstList)
+            {
+                foreach(var n2 in secondList)
+                {
+                    foreach(var op in  Enum.GetValues(typeof(ComboCountdownNumber.Operation)).Cast<ComboCountdownNumber.Operation>())
+                    {
+                        results.Add(new ComboCountdownNumber( n1,   n2, op));                    }
+                }
+            }
+        }
+
+        private void PopulateSolution()
+        {
+            foreach(var hash in container.GetHashes())
+            {
+                var numbers = container.GetNumbers(hash);
+                foreach(var number in numbers)
+                {
+                    if(number.Value == puzzle.solution)
+                    {
+                        this.solutions.Add(number);
+                    }
+                }
+            }
         }
     }
 }
