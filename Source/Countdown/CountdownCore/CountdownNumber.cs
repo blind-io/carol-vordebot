@@ -7,7 +7,7 @@ using System.Diagnostics;
 
 namespace CountdownCore
 {
-    abstract class CountdownNumber
+    public abstract class CountdownNumber
     {
         public CountdownNumber(){}
         /// <summary>
@@ -47,8 +47,9 @@ namespace CountdownCore
     /// </summary>
     class SingleCountdownNumber: CountdownNumber
     {
-        SingleCountdownNumber(int value, byte numbersHash)
+        public SingleCountdownNumber(int value, int numbersHash)
         {
+
             this.Value = value;
             this.NumbersHash = numbersHash;
         }
@@ -73,7 +74,7 @@ namespace CountdownCore
             ADD, MULTIPLY, SUBTRACT          
         }
 
-        ComboCountdownNumber(ref CountdownNumber parentA, ref CountdownNumber parentB, Operation operation)
+        public ComboCountdownNumber(ref CountdownNumber parentA, ref CountdownNumber parentB, Operation operation)
         {
             if (operation == Operation.SUBTRACT && parentA.Value < parentB.Value)
             {
