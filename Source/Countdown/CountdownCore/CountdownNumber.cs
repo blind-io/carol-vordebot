@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Diagnostics;
 
 namespace CountdownCore
 {
@@ -69,16 +70,29 @@ namespace CountdownCore
         /// </summary>
         public enum Operation
         {
-            ADD, MULTIPLY, A_SUBTRACT_B, B_SUBTRACT_A          
+            ADD, MULTIPLY, SUBTRACT          
         }
 
         ComboCountdownNumber(ref CountdownNumber parentA, ref CountdownNumber parentB, Operation operation)
         {
-            this.parentA = parentA;
-            this.parentB = parentB;
+            if (operation == Operation.SUBTRACT && parentA.Value < parentB.Value)
+            {
+                //special case to keep all numbers positive
+                this.parentA = parentB;
+                this.parentB = parentA;
+
+            }
+            else
+            {
+                //default don't change ordering.
+                this.parentA = parentA;
+                this.parentB = parentB;
+            }
+            //calculate the value and hash.
             this.operation = operation;
             this.Value = CalculateValue();
             this.NumbersHash = parentA.CombineHash(ref parentB);
+            Debug.Assert(this.Value >= 0);
         }
 
 
@@ -98,10 +112,8 @@ namespace CountdownCore
                     return parentA.Value + parentB.Value;
                 case Operation.MULTIPLY:
                     return parentA.Value * parentB.Value;
-                case Operation.A_SUBTRACT_B:
+                case Operation.SUBTRACT:
                     return parentA.Value - parentB.Value;
-                case Operation.B_SUBTRACT_A:
-                    return parentB.Value - parentA.Value;
                 default:
                     return 0;
             }
@@ -111,22 +123,6 @@ namespace CountdownCore
 
         public override String ToString()
         {
-            //select the left and right values
-            String left = "?";
-            String right = "?";
-            switch (operation)
-            {
-                case Operation.ADD:
-                case Operation.MULTIPLY:
-                case Operation.A_SUBTRACT_B:
-                    left = parentA.ToString();
-                    right = parentB.ToString();
-                    break;
-                case Operation.B_SUBTRACT_A:
-                    left = parentB.ToString();
-                    right = parentA.ToString();
-                    break;
-            }
             //select the operation
             String op = "?";
                switch(operation)
@@ -135,15 +131,17 @@ namespace CountdownCore
                     op = "+";
                     break;
                 case Operation.MULTIPLY:
-                       op = "x";
+                    op = "x";
                     break;
-                case Operation.A_SUBTRACT_B:
-                case Operation.B_SUBTRACT_A:
+                case Operation.SUBTRACT:
                     op = "-";
+                    break;
+                default:
+                    Debug.Assert(false);
                     break;
             }
             //return the full string
-               return "(" + left + " " + op + " " + right + ")";
+               return "(" + parentA.ToString() + " " + op + " " + parentB.ToString() + ")";
         
         }
         
